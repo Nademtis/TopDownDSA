@@ -82,10 +82,10 @@ body {
 }
 @keyframes takeAnimation {
   0% {
-    transform: translateY(0) scale(1.2);
-    opacity: 1;
+    transform: translateY(0) scale(1.3);
+    opacity: 1.2;
   }
-  80% {
+  65% {
     transform: scale(1); 
     opacity: 1;
   }

@@ -8,7 +8,7 @@ export default class Controller {
         this.model = new Model()
         this.view = new View(this)
         this.tick = this.tick.bind(this); //binds this.tick function to this controller instance... i think
-        this.controls = { left: false, right: false, up: false, down: false }
+        this.controls = { left: false, right: false, up: false, down: false, use: false }
         this.lastTimestamp = 0
         this.lastPlayerCoord = { row: 0, col: 0 }
     }
@@ -31,6 +31,7 @@ export default class Controller {
         this.movePlayer(deltaTime)
 
         this.checkForItems()
+
 
         this.view.displayPlayerAtPosition(this.model.player)
         this.view.displayerPlayerAnimation(this.model.player)
@@ -92,18 +93,20 @@ export default class Controller {
         else { return true }*/
     }
     checkForItems() {
-        const items = this.getItemsUnderPlayer();
-        if (items.length > 0) {
-            // only do something if there are items!
-            console.log(`There are ${items.length} items under player!`);
+        const itemCoord = this.getItemsCoordUnderPlayer();
+        if (itemCoord !== null && this.controls.use) {
+            console.log("picked Up");
+            this.view.pickupVisualItem(itemCoord, this.model.GRID_WIDTH)
+            this.model.items[itemCoord.row][itemCoord.col] = 0
         }
     }
-    getItemsUnderPlayer() {
+    getItemsCoordUnderPlayer() {
         const coord = this.model.getCoordFromPos(this.model.player)
-        if (this.model.items[coord.row][coord.col]) {
-            return [1]
+        if (this.model.items[coord.row][coord.col] == 1) {
+            return coord
+        }else{
+            return null
         }
-        return [];
     }
 
     initEventListeners() {
@@ -116,6 +119,7 @@ export default class Controller {
             case "ArrowLeft": this.controls.left = true; break
             case "ArrowUp": this.controls.up = true; break
             case "ArrowDown": this.controls.down = true; break
+            case "e": this.controls.use = true; break
         }
         if (this.controls.right) this.direction = "right"
         else if (this.controls.left) this.direction = "left"
@@ -129,6 +133,7 @@ export default class Controller {
             case "ArrowLeft": this.controls.left = false; break
             case "ArrowUp": this.controls.up = false; break
             case "ArrowDown": this.controls.down = false; break
+            case "e": this.controls.use = false; break
         }
     }
     showDebuging() {

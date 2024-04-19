@@ -76,6 +76,20 @@ export default class View {
 
 
     }
+    pickupVisualItem({ row, col }, GRID_WIDTH) {
+        const visualItems = document.querySelectorAll(".item");
+        visualItems.forEach(visualItem => {
+            // Get the row and column values from the visual item's style
+            const visualRow = parseInt(visualItem.style.getPropertyValue("--row"));
+            const visualCol = parseInt(visualItem.style.getPropertyValue("--col"));
+            // Check if the visual item's position matches the provided row and column
+            if (visualRow == row && visualCol == col) {
+                // Add the 'take' class to apply the animation
+                visualItem.classList.add('take');
+            }
+        });
+
+    }
     highlightTile({ row, col }, GRID_WIDTH) {
         const visualTiles = document.querySelectorAll("#background .tile")
         const visualTile = visualTiles[row * GRID_WIDTH + col]
