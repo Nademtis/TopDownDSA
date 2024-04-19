@@ -10,7 +10,7 @@ export default class Controller {
         this.tick = this.tick.bind(this); //binds this.tick function to this controller instance... i think
         this.controls = { left: false, right: false, up: false, down: false }
         this.lastTimestamp = 0
-        this.lastPlayerCoord = {row: 0, col: 0}
+        this.lastPlayerCoord = { row: 0, col: 0 }
     }
 
     init() {
@@ -18,6 +18,7 @@ export default class Controller {
         requestAnimationFrame(this.tick)
         this.view.createTiles(this.model.tiles, this.model.GRID_WIDTH, this.model.GRID_HEIGHT, this.model.TILE_SIZE)
         this.view.displayTiles(this.model.tiles, this.model.GRID_WIDTH)
+        this.view.createItems(this.model.items, this.model.GRID_WIDTH, this.model.GRID_HEIGHT)
         //this.view.displayPlayerAtPosition(this.model.player)
 
     }
@@ -28,6 +29,8 @@ export default class Controller {
         this.lastTimestamp = timestamp
 
         this.movePlayer(deltaTime)
+
+        this.checkForItems()
 
         this.view.displayPlayerAtPosition(this.model.player)
         this.view.displayerPlayerAnimation(this.model.player)
@@ -68,14 +71,14 @@ export default class Controller {
         }
     }
     canMoveTo(pos) {
-        const {row, col} = this.model.getCoordFromPos(pos)
+        const { row, col } = this.model.getCoordFromPos(pos)
 
         if (row < 0 || row >= this.model.GRID_HEIGHT ||
-             col < 0 || col >= this.model.GRID_WIDTH){
+            col < 0 || col >= this.model.GRID_WIDTH) {
             return false
         }
-        const tileType = this.model.getTileAtAtCoord({row, col})
-        switch(tileType){
+        const tileType = this.model.getTileAtAtCoord({ row, col })
+        switch (tileType) {
             case 0: return true;
             case 1: return true;
             case 3: return true
@@ -88,7 +91,20 @@ export default class Controller {
         }
         else { return true }*/
     }
-
+    checkForItems() {
+        const items = this.getItemsUnderPlayer();
+        if (items.length > 0) {
+            // only do something if there are items!
+            console.log(`There are ${items.length} items under player!`);
+        }
+    }
+    getItemsUnderPlayer() {
+        const coord = this.model.getCoordFromPos(this.model.player)
+        if (this.model.items[coord.row][coord.col]) {
+            return [1]
+        }
+        return [];
+    }
 
     initEventListeners() {
         document.addEventListener("keydown", (event) => this.keyPress(event)) // without using arrow function the method would not have the correct refference -->
@@ -115,20 +131,20 @@ export default class Controller {
             case "ArrowDown": this.controls.down = false; break
         }
     }
-    showDebuging(){
+    showDebuging() {
         this.showDebugingunderPlayer()
         this.view.showDebugingPlayerRect()
         this.view.showDebugingPlayerRegistrationPoint(this.model.player)
 
     }
-    showDebugingunderPlayer(){
+    showDebugingunderPlayer() {
         const coord = this.model.getCoordFromPos(this.model.player)
-        
-        if (coord.row != this.lastPlayerCoord.row || coord.col != this.lastPlayerCoord.col){
-            this.view.unhighlightTile(this.lastPlayerCoord,this.model.GRID_WIDTH)
-            this.view.highlightTile(coord,this.model.GRID_WIDTH)
+
+        if (coord.row != this.lastPlayerCoord.row || coord.col != this.lastPlayerCoord.col) {
+            this.view.unhighlightTile(this.lastPlayerCoord, this.model.GRID_WIDTH)
+            this.view.highlightTile(coord, this.model.GRID_WIDTH)
         }
 
-        this.lastPlayerCoord = coord        
+        this.lastPlayerCoord = coord
     }
 }

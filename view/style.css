@@ -59,6 +59,40 @@ body {
 
 #items {
   grid-area: 1 / 1;
+  display: grid;
+  position: relative;
+  grid-template-columns: repeat(var(--GRID_WIDTH), var(--TILE_SIZE));
+  grid-template-rows: repeat(var(--GRID_HEIGHT), var(--TILE_SIZE));
+}
+.item {
+  width: var(--TILE_SIZE);
+  aspect-ratio: 1 / 1;
+  background-size: 100%;
+  image-rendering: pixelated;
+  grid-area: calc(var(--row) + 1) / calc(var(--col) + 1);
+}
+.item.gold {
+  background-image: url(images/images/items/gold.png);
+}
+.take{
+  animation-iteration-count: 1;
+  animation-name: takeAnimation;
+  animation-fill-mode: forwards;
+  animation-duration: 0.45s;
+}
+@keyframes takeAnimation {
+  0% {
+    transform: translateY(0) scale(1.2);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(1); 
+    opacity: 1;
+  }
+  100% {
+    transform:  scale(0.5); /* Raise up further by 20px */
+    opacity: 0; /* Fade out */
+  }
 }
 #characters {
   grid-area: 1 / 1;
