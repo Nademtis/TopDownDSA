@@ -32,7 +32,7 @@ export default class Controller {
         this.view.displayPlayerAtPosition(this.model.player)
         this.view.displayerPlayerAnimation(this.model.player)
 
-        //this.showDebuging()
+        this.showDebuging()
     }
     movePlayer(deltaTime) {
         this.model.player.isMoving = false
