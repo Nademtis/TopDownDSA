@@ -56,6 +56,15 @@ body {
 
   translate: var(--regX) var(--regY);
 }
+.show-hitbox::after{
+  content: "";
+  position: absolute;
+  width: var(--hitboxW);
+  height: var(--hitboxH);
+
+  translate: var(--hitboxX) var(--hitboxY);
+  outline: 2px solid rgb(0, 255, 225);;
+}
 
 #items {
   grid-area: 1 / 1;
@@ -78,7 +87,7 @@ body {
   animation-iteration-count: 1;
   animation-name: takeAnimation;
   animation-fill-mode: forwards;
-  animation-duration: 0.45s;
+  animation-duration: 0.38s;
 }
 @keyframes takeAnimation {
   0% {
@@ -90,8 +99,8 @@ body {
     opacity: 1;
   }
   100% {
-    transform:  scale(0.5); /* Raise up further by 20px */
-    opacity: 0; /* Fade out */
+    transform:  scale(0.5); 
+    opacity: 0;
   }
 }
 #characters {

@@ -10,7 +10,7 @@ export default class Controller {
         this.tick = this.tick.bind(this); //binds this.tick function to this controller instance... i think
         this.controls = { left: false, right: false, up: false, down: false, use: false }
         this.lastTimestamp = 0
-        this.lastPlayerCoord = { row: 0, col: 0 }
+        this.highlightedTiles = []
     }
 
     init() {
@@ -66,13 +66,13 @@ export default class Controller {
             newPos.y += this.model.player.speed * deltaTime
         }
 
-        if (this.canMoveTo(newPos)) {
+        if (this.canMovePlayerToPos(newPos)) {
             this.model.player.x = newPos.x
             this.model.player.y = newPos.y
         }
     }
-    canMoveTo(pos) {
-        const { row, col } = this.model.getCoordFromPos(pos)
+    canMoveTo({ row, col }) {
+        //const  = this.model.getCoordFromPos(pos)
 
         if (row < 0 || row >= this.model.GRID_HEIGHT ||
             col < 0 || col >= this.model.GRID_WIDTH) {
@@ -84,13 +84,17 @@ export default class Controller {
             case 1: return true;
             case 3: return true
         }
+    }
+    canMovePlayerToPos(newPos){
+        const coords = this.model.getTilesUnderPlayer(newPos)
 
-        /*if (pos.x < 0 || pos.x > 484 ||
-            pos.y < 0 || pos.y > 340) {
-            return false
-
+        let canMove = true
+        for (let i = 0; i < coords.length; i++) {
+            if (!this.canMoveTo(coords[i])){
+                canMove = false
+            }
         }
-        else { return true }*/
+        return canMove
     }
     checkForItems() {
         const itemCoord = this.getItemsCoordUnderPlayer();
@@ -104,7 +108,7 @@ export default class Controller {
         const coord = this.model.getCoordFromPos(this.model.player)
         if (this.model.items[coord.row][coord.col] == 1) {
             return coord
-        }else{
+        } else {
             return null
         }
     }
@@ -140,16 +144,21 @@ export default class Controller {
         this.showDebugingunderPlayer()
         this.view.showDebugingPlayerRect()
         this.view.showDebugingPlayerRegistrationPoint(this.model.player)
+        this.view.showDebugingPlayerHitbox(this.model.player)
 
     }
     showDebugingunderPlayer() {
-        const coord = this.model.getCoordFromPos(this.model.player)
+        const coordList = this.model.getTilesUnderPlayer()
 
-        if (coord.row != this.lastPlayerCoord.row || coord.col != this.lastPlayerCoord.col) {
-            this.view.unhighlightTile(this.lastPlayerCoord, this.model.GRID_WIDTH)
-            this.view.highlightTile(coord, this.model.GRID_WIDTH)
+        for (let i = 0; i < this.highlightedTiles.length; i++) {
+            this.view.unhighlightTile(this.highlightedTiles[i], this.model.GRID_WIDTH)
+
         }
+        for (let i = 0; i < coordList.length; i++) {
+            this.view.highlightTile(coordList[i], this.model.GRID_WIDTH)
 
-        this.lastPlayerCoord = coord
+        }
+        this.highlightedTiles = coordList
+
     }
 }

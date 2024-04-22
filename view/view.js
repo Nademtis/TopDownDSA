@@ -76,15 +76,12 @@ export default class View {
 
 
     }
-    pickupVisualItem({ row, col }, GRID_WIDTH) {
+    pickupVisualItem({ row, col }) {
         const visualItems = document.querySelectorAll(".item");
         visualItems.forEach(visualItem => {
-            // Get the row and column values from the visual item's style
             const visualRow = parseInt(visualItem.style.getPropertyValue("--row"));
             const visualCol = parseInt(visualItem.style.getPropertyValue("--col"));
-            // Check if the visual item's position matches the provided row and column
             if (visualRow == row && visualCol == col) {
-                // Add the 'take' class to apply the animation
                 visualItem.classList.add('take');
             }
         });
@@ -115,6 +112,16 @@ export default class View {
         }
         visualPlayer.style.setProperty("--regX", player.regX + "px")
         visualPlayer.style.setProperty("--regY", player.regY + "px")
+    }
+    showDebugingPlayerHitbox(player) {
+        const visualPlayer = document.querySelector("#player")
+        if (!visualPlayer.classList.contains("show-hitbox")) {
+            visualPlayer.classList.add("show-hitbox")
+        }
+        visualPlayer.style.setProperty("--hitboxW", player.hitbox.w + "px")
+        visualPlayer.style.setProperty("--hitboxH", player.hitbox.h + "px")
+        visualPlayer.style.setProperty("--hitboxX", player.hitbox.x + "px")
+        visualPlayer.style.setProperty("--hitboxY", player.hitbox.y + "px")
     }
 
 

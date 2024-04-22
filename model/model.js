@@ -9,15 +9,15 @@ export default class Model {
     constructor() {
 
         this.player = {
-            x: 5,
-            y: 5,
+            x: 75,
+            y: 75,
             regX: 10,
             regY: 24,
-            hitbox: { //TODO random values, might need fixing
-                x: 4,
-                y: 7,
-                w: 12,
-                h: 17
+            hitbox: {
+                x: 7,
+                y: 15,
+                w: 10,
+                h: 10
             },
             speed: 140,
             isMoving: false,
@@ -57,6 +57,30 @@ export default class Model {
 
         const coord = { row, col }
         return coord
+    }
+    getTilesUnderPlayer(newPos = { x: this.player.x, y: this.player.y }) {
+        const tileCoords = []
+        const topLeft = {
+            x: newPos.x - this.player.regX + this.player.hitbox.x,
+            y: newPos.y - this.player.regY + this.player.hitbox.y
+        }
+        const topRight = { x: topLeft.x + this.player.hitbox.w, y: topLeft.y }
+        const bottomLeft = { x: topLeft.x, y: topLeft.y + this.player.hitbox.h };
+        const bottomRight = { x: topRight.x, y: bottomLeft.y };
+
+
+        const topLeftCoords = this.getCoordFromPos(topLeft)
+        const topRightCoords = this.getCoordFromPos(topRight)
+        const bottomLeftCoords = this.getCoordFromPos(bottomLeft);
+        const bottomRightCoords = this.getCoordFromPos(bottomRight);
+
+        tileCoords.push(topLeftCoords)
+        tileCoords.push(topRightCoords)
+        tileCoords.push(bottomLeftCoords);
+        tileCoords.push(bottomRightCoords);
+
+        return tileCoords
+
     }
 
 }
